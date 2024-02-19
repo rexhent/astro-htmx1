@@ -1,0 +1,39 @@
+<script lang="ts">
+  // I'm using typescript
+  // let angles = $state([0, 0, 0]); // using svelte 5 runes for fun - Had to disable for astro
+  // let triangle: string = $state(""); // actually anotating types here - again disabled for astro (it uses svelte v4)
+  let angles = [0, 0, 0];
+  let triangle: string = "";
+
+  const handleInputChange = (index: any, event: any) => {
+    // Yes this is lazy typescript
+    const value = parseInt(event.target.value, 10); // No idea why I need the radix, otherwise it doesn't use base 10 for whatever reason
+    if (!isNaN(value)) {
+      angles[index] = value;
+    } else {
+      triangle = "Angle must be an integer";
+    }
+  };
+
+  const checkEquilateral = () => {
+    if (angles[0] === angles[1] && angles[1] === angles[2]) {
+      triangle = "Equilateral triangle";
+    } else {
+      triangle = "Not an equilateral triangle";
+    }
+  };
+</script>
+
+<main>
+  {#each [0, 1, 2] as i}
+    <label for={`angle${i}`}>Angle {i}:</label>
+    <input
+      type="text"
+      id={`angle${i}`}
+      bind:value={angles[i]}
+      on:input={(e) => handleInputChange(i, e)}
+    /><br />
+  {/each}
+  <button on:click={checkEquilateral}>Check Equilateral</button>
+  <p>{triangle}</p>
+</main>
